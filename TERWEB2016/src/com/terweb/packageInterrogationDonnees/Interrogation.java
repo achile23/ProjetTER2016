@@ -43,7 +43,7 @@ public class Interrogation {
               
     //LoggerException.getLoggerException().log(Level.WARNING,null,ex);
     
-    static Object_RapportCalculMatrice initMatriceCalcul(String v_PathFile, String v_biomass, HashMap<String, ArrayList<String>> v_TopicOperations, HashMap<String, ArrayList<String>> v_RelationParametres ) throws Exception_AbsenceDocument, Exception_AbsenceExperienceBiomass, Exception_FichierCalcule, Exception_ParseException, IOException, Exception_BDDException, SQLException, Exception_SparqlConnexion, Exception_MatriceCalculVide
+    public static Object_RapportCalculMatrice initMatriceCalcul(String v_PathFile, String v_biomass, HashMap<String, ArrayList<String>> v_TopicOperations, HashMap<String, ArrayList<String>> v_RelationParametres ) throws Exception_AbsenceDocument, Exception_AbsenceExperienceBiomass, Exception_FichierCalcule, Exception_ParseException, IOException, Exception_BDDException, SQLException, Exception_SparqlConnexion, Exception_MatriceCalculVide
     {
         Object_RapportCalculMatrice rapport = new Object_RapportCalculMatrice();
          
