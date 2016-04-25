@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import javax.servlet.ServletException;
@@ -24,10 +25,12 @@ import com.terweb.packageExceptions.Exception_AbsenceDocument;
 import com.terweb.packageExceptions.Exception_AbsenceExperienceBiomass;
 import com.terweb.packageExceptions.Exception_BDDException;
 import com.terweb.packageExceptions.Exception_FichierCalcule;
+import com.terweb.packageExceptions.Exception_MatriceCalculVide;
 import com.terweb.packageExceptions.Exception_ParseException;
 import com.terweb.packageExceptions.Exception_SparqlConnexion;
 import com.terweb.packageInterrogationDonnees.Initialisation;
 import com.terweb.packageInterrogationDonnees.Interrogation;
+import com.terweb.packageInterrogationDonnees.Object_RapportCalculMatrice;
 public class PagePrincipal extends HttpServlet {
 
 	/**
@@ -78,7 +81,10 @@ public class PagePrincipal extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+			
+		    response.setContentType("application/json");  
 		
+		    String messageErreur = null;
 			BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
 	        String json = "";
 	        if(br != null){
@@ -89,71 +95,113 @@ public class PagePrincipal extends HttpServlet {
 	        
 	        ParametreClass parametres = mapper.readValue(json, ParametreClass.class);
 	        
-	        try {
+	        Object_RapportCalculMatrice rapport = new Object_RapportCalculMatrice();
+	        
+	        //try {
 	        	
 	        	String pathUser=getServletContext().getRealPath("/").replaceAll("\\\\", "/")+"DirectoryUsers/"+parametres.getUserID();
-	        	
-	        	Interrogation.initMatriceCalcul(pathUser,parametres.getBiomass(),parametres.getTopics(),parametres.getRelations());
-			
 	        
-	        } catch (Exception_AbsenceDocument
+	        //	rapport = Interrogation.initMatriceCalcul(pathUser,parametres.getBiomass(),parametres.getTopics(),parametres.getRelations());
+			    
+	        	System.out.println("---------------------"+rapport.getMessage());
+	        	
+	        	ArrayList<String> test2= new ArrayList<>(Arrays.asList("hamdane","mounir","hamid","fethi"));
+
+	        	rapport.setMessage(test2);
+	        	
+	        	System.out.println("Final :"+rapport.getMessage());
+
+	
+	        	if(!rapport.getMessage().isEmpty()){
+	        		System.out.println("hhhhhhhhhhhhhhhhhhhhhhhh");
+	        		messageErreur="Failed";
+	        		
+	        		mapper.writeValue(response.getOutputStream(), rapport.getMessage());
+	        		
+	        	}
+	     
+	        /*} catch (Exception_AbsenceDocument
 					| Exception_AbsenceExperienceBiomass
 					| Exception_FichierCalcule | Exception_ParseException
 					| Exception_BDDException | SQLException
-					| Exception_SparqlConnexion e) {
+					| Exception_SparqlConnexion | Exception_MatriceCalculVide e) {
+	        	     
+	                 messageErreur="Failed";
+	                 
+	    			 mapper.writeValue(response.getOutputStream(), "Failed");	
+	    			 
 			
-				e.printStackTrace();
-			}
-	       
+				
+			}*/
+	         
 	        /*************** calcul en R ******************/
 	        
-	        System.out.println("-------- experience -----\t"+parametres.getExperience());
-	        
-	        
-	        if(parametres.getExperience().equalsIgnoreCase("Efactor Best Experience")){
-	        	System.out.println("experience efactor -----------");
+	          if(messageErreur.isEmpty()){
+	            	
+	            
+	        	  if(parametres.getExperience().equalsIgnoreCase("Efactor Best Experience")){
 	        	
-	        	BestExperienceClass b =  new BestExperienceClass(getServletContext().getRealPath("/").replaceAll("\\\\", "/"),parametres.getUserID());
+	        	
+	        			BestExperienceClass b =  new BestExperienceClass(getServletContext().getRealPath("/").replaceAll("\\\\", "/"),parametres.getUserID());
 	    		
-	    		try {
-	    			
-	    			b.bestExpEfactor();
-	    			
-	    		} catch (ClassCalculException | ClassFileProblemException e) {
-	    			e.printStackTrace();
-	    		}
+			    		try {
+			    			
+			    				b.bestExpEfactor();
+			    				
+			    				mapper.writeValue(response.getOutputStream(), "Success");	
+			    				
+			    			
+			    		} catch (ClassCalculException | ClassFileProblemException e) {
+			    			
+			    			    messageErreur="Failed";
+			    			
+		    					mapper.writeValue(response.getOutputStream(), "Failed");	
+		    				
+			    			
+			    		}
 	    		
 	    		
 	        }else if(parametres.getExperience().equalsIgnoreCase("Efactor All Variation Document")){
 	        	
 	        
-	        	AllVarDocClass b =  new AllVarDocClass(getServletContext().getRealPath("/").replaceAll("\\\\", "/"), parametres.getUserID());
+	        		AllVarDocClass b =  new AllVarDocClass(getServletContext().getRealPath("/").replaceAll("\\\\", "/"), parametres.getUserID());
 				
-			    try {
-			    	
-					b.allVarDocEfactor();
-					
-				} catch (ClassCalculException | ClassFileProblemException e) {
-					e.printStackTrace();
-				}
-			    
+				    try {
+				    	
+						b.allVarDocEfactor();
+						
+						
+	    				mapper.writeValue(response.getOutputStream(), "Success");	
+	    				
+						
+					} catch (ClassCalculException | ClassFileProblemException e) {
+						
+						messageErreur="Failed";
+						
+						mapper.writeValue(response.getOutputStream(), "Failed");	
+	    				
+					}
 			    
 			    
 	        }else if(parametres.getExperience().equalsIgnoreCase("Efactor All Variation Topic")){
 	        	
 	        	
-	        	AllVarTopicClass b =  new AllVarTopicClass(getServletContext().getRealPath("/").replaceAll("\\\\", "/"),parametres.getUserID());
-	    		
-				try {
-					
-					b.allVarTopicEfactor();
-					
-				} catch (ClassCalculException | ClassFileProblemException e) {
-					e.printStackTrace();
-				}
-	        }
-			
-	        response.setContentType("application/json");  
-	        mapper.writeValue(response.getOutputStream(), "OK");
+		        	AllVarTopicClass b =  new AllVarTopicClass(getServletContext().getRealPath("/").replaceAll("\\\\", "/"),parametres.getUserID());
+		    		
+					try {
+						
+						b.allVarTopicEfactor();
+						
+	    				mapper.writeValue(response.getOutputStream(), "Success");	
+	    				
+						
+					} catch (ClassCalculException | ClassFileProblemException e) {
+						
+						messageErreur="Failed";
+						
+						mapper.writeValue(response.getOutputStream(), "Failed");	
+    			   }
+	      }	
+	   }
 	}
 }

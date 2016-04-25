@@ -15,7 +15,7 @@ public class ConnectionRClass {
 	    public static synchronized Rengine getConnection() {
 	        
 	        if(connection == null){
-	            
+	            System.out.println("hhhhhhhhhhhhhhhhhh");
 	          new ConnectionRClass();
 	          
 	        }

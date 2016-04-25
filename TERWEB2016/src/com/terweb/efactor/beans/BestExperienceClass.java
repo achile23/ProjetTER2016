@@ -35,7 +35,9 @@ public class BestExperienceClass extends ClassAbstractCalculEfactor {
 	public void bestExpEfactor() throws ClassCalculException, ClassFileProblemException {
 		
 		try {
+			
 		     String chm = super.preCalculEfactor(userCurrentID , pathCh);
+		     
 		     if(chm!=null){
 		    
 				 LinkedList<String> lineFile = new LinkedList<String>();

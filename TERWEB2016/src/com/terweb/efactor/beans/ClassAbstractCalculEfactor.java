@@ -24,7 +24,7 @@ public abstract class ClassAbstractCalculEfactor {
 	 * @throws IOException  
 	 */
 	public String preCalculEfactor(String userCurrentID,String pathCh) throws IOException, ClassCalculException{
-		
+		System.out.println("appppelllllllllllllllll");
 		File preCalculFile  = new File(pathCh+"DirectoryUsers/"+userCurrentID+"/preCalcul"+userCurrentID+".csv");
 		
 		if(preCalculFile.exists()){
@@ -38,7 +38,7 @@ public abstract class ClassAbstractCalculEfactor {
 		       else {
 		       String convertinteric =pathCh+"ModuleRCalculEfactor/convertinterconfiance.R";
 			   
-			   String filecsv = pathCh+"DirectoryUsers/"+userCurrentID+"/resultFileReq"+userCurrentID+".csv";
+			   String filecsv = pathCh+"DirectoryUsers/"+userCurrentID+"/CalculeR.csv";
 			   
 		       String fileOutResult =pathCh+"DirectoryUsers/"+userCurrentID+"/preCalcul"+userCurrentID+".csv";
 		       
